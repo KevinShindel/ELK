@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+
+  redis:
+    container_name: redis
+    image: redis:7.0.1
+
+  apache:
+    build: Dockerfile_apache
+    container_name: apache
+
+  logstash:
+    build: Dockerfile_logstash
+    container_name: logstash
+
+  kibana:
+    container_name: kibana
+    image: kibana:6.4.0
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:6.4.0
+
