@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+
+  es-node-01:
+    container_name: es-node-01
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+    image: elasticsearch:7.17.0
+    networks:
+      - elastic
+
+  kibana-01:
+    container_name: kibana-01
+    image: kibana:7.17.0
+    ports:
+      - "5601:5601"
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://es-node-01:9200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "kibana-01:5601"]
+      interval: 60s
+      timeout: 60s
+      retries: 5
+    depends_on:
+      - es-node-01
+    networks:
+      - elastic
+
+  logstash:
+    container_name: logstash-01
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    image: logstash:7.16.3
+    depends_on:
+      redis-01:
+        condition: service_started
+      kibana-01:
+        condition: service_healthy
+    networks:
+      - elastic
+
+  redis-01:
+    container_name: redis-01
+    image: redis:7.0.1
+    ports:
+      - "8888:8888"
+      - "6379:6379"
+    networks:
+      - elastic
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ] # TODO: Investigate this
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+networks:
+  elastic:
+    name: elastic
