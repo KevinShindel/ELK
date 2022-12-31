@@ -10,7 +10,7 @@ MAX_PRODUCED_CNT = 10000
 def get_reg_user() -> dict:
     return {
         "name": fake.name(),
-        "address": fake.address(),
+        # "address": fake.address(),
         "created_at": fake.year()
     }
 
@@ -20,7 +20,7 @@ def json_serializer(data: dict) -> bytes:
 
 
 def main():
-    producer = KafkaProducer(bootstrap_servers=["192.168.0.106:9092"],
+    producer = KafkaProducer(bootstrap_servers=["host.docker.internal:9092"],
                              value_serializer=json_serializer)
     value = get_reg_user()
     for i in range(MAX_PRODUCED_CNT):

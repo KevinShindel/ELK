@@ -1,0 +1,30 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+metricbeat.modules:
+- module: mysql
+  metricsets:
+    - status
+    - performance
+  period: 10s
+  hosts: ["tcp(root:password@localhost:3306)/"]
+#  username: root
+#  password: password
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+
+setup.kibana:
+  host: "kibana:5601"
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+#  username: "username"
+#  password: "password"
+

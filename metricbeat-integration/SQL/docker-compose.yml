@@ -1,0 +1,57 @@
+version: "3.8"
+services:
+
+  metricbeat:
+    build: .
+    container_name: metricbeat
+    restart: on-failure
+    depends_on:
+      sql:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+
+  sql:
+    image: mysql:latest
+    container_name: sql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    container_name: elasticsearch
+    restart: on-failure
+    environment:
+#      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: kibana:7.17.0
+    container_name: kibana-01
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "kibana:5601" ]
+      interval: 60s
+      timeout: 60s
+      retries: 5
