@@ -18,7 +18,7 @@ filebeat.autodiscover:
       templates:
       - condition:
             equals:
-              docker.container.name: nginx-01
+              docker.container.name: nginx
         config:
           - type: container
             paths:
@@ -35,7 +35,7 @@ processors:
 #
 # The following example enriches each event with host metadata.
 #
-- add_host_metadata: ~
+#- add_host_metadata: ~
 
 output.logstash:
-   hosts: ["logstash-01:5400"]
+   hosts: ["logstash:5400"]
