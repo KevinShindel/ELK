@@ -3,12 +3,11 @@ metricbeat.config.modules:
   reload.enabled: false
 
 metricbeat.modules:
-- module: mysql
-  metricsets:
-    - status
-    - performance
-  period: 10s
-  hosts: ["root:password@tcp(sql:3306)/"]
+- module: redis
+  metricsets: ["info", "keyspace"]
+  enabled: true
+  period: 1s
+  hosts: ["redis:6379"]
 
 setup.template.settings:
   index.number_of_shards: 1
