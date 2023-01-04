@@ -7,10 +7,23 @@ services:
       - "9200:9200"
       - "9300:9300"
     environment:
+      - bootstrap.memory_lock=true
+      - cluster.name=docker-cluster
+      - cluster.routing.allocation.disk.threshold_enabled=false
       - discovery.type=single-node
+      - ES_JAVA_OPTS=-XX:UseAVX=2 -Xms1g -Xmx1g
     image: elasticsearch:7.17.0
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
     networks:
       - elastic
+    healthcheck:
+      interval: 30s
+      retries: 10
+      test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
+
 
   kibana-01:
     container_name: kibana-01
@@ -18,14 +31,15 @@ services:
     ports:
       - "5601:5601"
     environment:
-      - "ELASTICSEARCH_HOSTS=http://es-node-01:9200"
+      ELASTICSEARCH_URL: http://es-node-01:9200
+      ELASTICSEARCH_HOSTS: http://es-node-01:9200
     healthcheck:
-      test: ["CMD", "curl", "-f", "kibana-01:5601"]
-      interval: 60s
-      timeout: 60s
-      retries: 5
+      interval: 30s
+      retries: 20
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
     depends_on:
-      - es-node-01
+      es-node-01:
+        condition: service_healthy
     networks:
       - elastic
 
