@@ -1,0 +1,13 @@
+- module: redis
+  metricsets:
+    - info
+    - keyspace
+    - key
+  key.patterns:
+    - pattern: 'redis*'
+      limit: 20
+
+  period: 1s
+  hosts: ["redis:6379"]
+  network: tcp
+  maxconn: 5

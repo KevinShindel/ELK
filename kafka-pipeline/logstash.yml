@@ -1,4 +1,4 @@
 http.host: "0.0.0.0"
-# xpack.monitoring.elasticsearch.hosts: [ "http://elastic-01:9200" ]
+#xpack.monitoring.elasticsearch.hosts: [ "http://elastic-01:9200" ]
 
 xpack.monitoring.enabled: false

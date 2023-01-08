@@ -10,6 +10,8 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+    networks:
+      - redis
 
   redis:
     image: redis:7.0.1
@@ -21,6 +23,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 50
+    networks:
+      - redis
 
   elasticsearch:
     image: elasticsearch:8.5.3
@@ -46,6 +50,8 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    networks:
+      - redis
 
   kibana:
     image: kibana:8.5.3
@@ -61,3 +67,10 @@ services:
       interval: 60s
       timeout: 60s
       retries: 5
+    networks:
+      - redis
+
+networks:
+  redis:
+    name:
+      redis

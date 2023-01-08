@@ -1,0 +1,9 @@
+- module: mysql
+  metricsets:
+    - status
+    - performance
+  hosts: ["(sql:3306)/"]
+  network: tcp
+  period: 5s
+  username: root
+  password: password

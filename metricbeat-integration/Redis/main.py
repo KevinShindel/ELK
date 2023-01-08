@@ -12,11 +12,20 @@ def main():
     client = get_redis_connection()
     keyspace = 'redis:list'
     idx = 0
-    while True:
+    for _ in range(100):
         values = {'data': 1, 'value': 0, 'idx': idx}
         client.rpush(keyspace, json.dumps(values))
         idx += 1
-        time.sleep(0.3)
+        time.sleep(0.1)
+    print('list done')
+
+    keyspace = 'redis:dict'
+    for _ in range(100):
+        values = {'data': 1, 'value': 0, 'idx': idx}
+        client.hset(name=keyspace, mapping=values)
+        idx += 1
+        time.sleep(0.1)
+    print('dict done')
 
 
 if __name__ == '__main__':

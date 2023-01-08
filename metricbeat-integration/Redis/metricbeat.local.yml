@@ -2,6 +2,13 @@ metricbeat.config.modules:
   path: ${path.config}/modules.d/*.yml
   reload.enabled: false
 
+metricbeat.modules:
+- module: redis
+  metricsets: ["info", "keyspace"]
+  enabled: true
+  period: 1s
+  hosts: ["redis:6379"]
+
 setup.template.settings:
   index.number_of_shards: 1
   index.codec: best_compression
