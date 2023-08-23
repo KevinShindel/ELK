@@ -28,8 +28,6 @@ services:
       - ./logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
     image: logstash:7.10.1
-    #command:
-    #  - logstash --setup && logstash -f /usr/share/logstash/pipeline/logstash.conf
     env_file:
       - .env
     networks:
