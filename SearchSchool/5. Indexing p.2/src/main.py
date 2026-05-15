@@ -1,10 +1,9 @@
 from csv import DictReader
 from typing import Iterable
 
+from common import ELASTIC_SEARCH_API_ENDPOINT, FILE, TEST_DOC
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
-
-from common import ELASTIC_SEARCH_API_ENDPOINT, FILE, TEST_DOC
 
 
 def _create_api() -> Elasticsearch:
@@ -22,7 +21,7 @@ def _get_data(filepath: str) -> Iterable:
     :param filepath: string
     :return: Iterable
     """
-    reader = open(file=filepath, mode='r', encoding='utf-8')
+    reader = open(file=filepath, mode="r", encoding="utf-8")
     csv_reader = DictReader(reader)
     yield from csv_reader
 
@@ -56,16 +55,16 @@ def _create_index(client) -> None:
 def main():
     api = _create_api()  # Create client
     _create_index(client=api)  # Create index
-    index = 'demo-csv'  # Index name
+    index = "demo-csv"  # Index name
     data = _get_data(FILE)  # get iterated data from csv file
     created, _ = bulk(client=api, index=index, actions=data)  # bulk creation from file
-    document = api.get(index=index, id='901242')  # Get created document
-    assert document.body['_source'] == TEST_DOC   # Check created document with tested
+    document = api.get(index=index, id="901242")  # Get created document
+    assert document.body["_source"] == TEST_DOC  # Check created document with tested
     queryset = api.search(index=index)  # Get all created documents
-    assert queryset.body['hits']['total']['value'] is created  # check quantity len
+    assert queryset.body["hits"]["total"]["value"] is created  # check quantity len
     api.indices.delete(index=index)  # Drop index with documents
     print(api.info())  # Show Elasticsearch
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
