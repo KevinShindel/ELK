@@ -1,10 +1,13 @@
 import os
-from elasticsearch import Elasticsearch
+
 from dotenv import find_dotenv, load_dotenv
+from elasticsearch import Elasticsearch
 
 load_dotenv(find_dotenv())
 
-ELASTIC_SEARCH_API_ENDPOINT = os.getenv('ELASTIC_SEARCH_API_ENDPOINT', 'http://localhost:9200')
+ELASTIC_SEARCH_API_ENDPOINT = os.getenv(
+    "ELASTIC_SEARCH_API_ENDPOINT", "http://localhost:9200"
+)
 
 
 def _create_api() -> Elasticsearch:
