@@ -1,6 +1,5 @@
 import argparse
 import sys
-from typing import List
 
 from common import ELASTIC_SEARCH_API_ENDPOINT
 from elasticsearch import Elasticsearch
@@ -15,7 +14,7 @@ def _create_api() -> Elasticsearch:
     return api
 
 
-def make_search(api: Elasticsearch, args) -> List[dict]:
+def make_search(api: Elasticsearch, args) -> list[dict]:
     match args.dsl_query_type:
         case "match_all":
             request = api.search(index=args.index, body={"query": {"match_all": {}}})

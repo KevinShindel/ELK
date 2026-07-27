@@ -1,12 +1,11 @@
 import argparse
 import sys
-from typing import List
 
 from common import _create_api
 from elasticsearch import Elasticsearch
 
 
-def make_search(api: Elasticsearch, args) -> List[dict]:
+def make_search(api: Elasticsearch, args) -> list[dict]:
     if args.dsl_query_type == "match":
         request = api.search(
             index=args.index,
