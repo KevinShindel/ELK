@@ -1,7 +1,7 @@
 import asyncio
 import logging
+from collections.abc import Iterable
 from csv import DictReader
-from typing import Iterable
 
 from common import ELASTIC_SEARCH_API_ENDPOINT, FILE, TEST_DOC
 from elasticsearch import AsyncElasticsearch
